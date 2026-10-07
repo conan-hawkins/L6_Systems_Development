@@ -1,5 +1,5 @@
 # Container image for the Flask app, served by gunicorn.
-FROM python:3.12-slim
+FROM python:3.13-slim
 
 WORKDIR /app
 COPY pyproject.toml README.md ./
