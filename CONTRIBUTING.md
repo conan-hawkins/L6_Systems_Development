@@ -2,93 +2,144 @@
 
 ## Branches
 
-| Branch      | Purpose                                         | Deployed to |
-|-------------|-------------------------------------------------|-------------|
-| `main`      | Production. Always releasable.                  | Production  |
-| `staging`   | Release candidates under test.                  | Staging     |
-| `dev`       | Integration branch. Default target for work.    | —           |
-| `feature/*` | New features, branched from `dev`.              | —           |
-| `fix/*`     | Bug fixes, branched from `dev`.                 | —           |
-| `hotfix/*`  | Urgent production fixes, branched from `main`.  | —           |
+| Branch      | Purpose                                          | Deployed to |
+|-------------|--------------------------------------------------|-------------|
+| `main`      | Production. Always releasable.                   | Production  |
+| `staging`   | Release candidates under test.                   | Staging     |
+| `dev`       | Integration branch. Default target for work.     | —           |
+| `feature/*` | New features, branched from `dev`.               | —           |
+| `fix/*`     | Bug fixes, branched from `dev`.                  | —           |
+| `docs/*`    | Documentation-only changes, branched from `dev`. | —           |
+| `hotfix/*`  | Urgent production fixes, branched from `main`.   | —           |
 
-Never commit directly to `main`, `staging` or `dev`. All changes arrive through a merge.
+`main`, `staging` and `dev` are protected by repository rulesets: direct pushes,
+force pushes and deletion are blocked. Every change arrives through a pull request.
+
+## Issues and branch names
+
+Every change starts with a [GitHub Issue](https://docs.github.com/en/issues) describing
+what is needed and why. GitHub numbers issues automatically (`#1`, `#2`, ...).
+
+Name the branch `<type>/<issue number>-<short-description>`, in lowercase with hyphens:
+
+```
+feature/3-add-ci
+docs/4-contributing-prs
+fix/7-login-redirect
+hotfix/9-session-timeout
+```
+
+The type comes first so it matches the branch patterns above. Do not invent your own
+numbering; always use the issue number.
+
+In the pull request description, link the issue with a closing keyword:
+
+```
+Closes #3
+```
+
+GitHub then links the pull request to the issue and closes the issue when the pull
+request is merged. See
+[Linking a pull request to an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
 
 ## Workflow
 
 ```
-feature/* --squash--> dev --merge--> staging --merge--> main
+feature/* --squash PR--> dev --merge PR--> staging --merge PR--> main
 ```
 
-### 1. Start a feature
+| Pull request         | Merge method on GitHub    | Why                                    |
+|----------------------|---------------------------|----------------------------------------|
+| `feature/*` → `dev`  | **Squash and merge**      | One clean commit per feature on `dev`. |
+| `dev` → `staging`    | **Create a merge commit** | Keeps `staging` in step with `dev`.    |
+| `staging` → `main`   | **Create a merge commit** | Keeps `main` in step with `staging`.   |
+
+The rulesets only allow the method listed for each branch.
+
+### 1. Start a branch
 
 ```bash
 git switch dev
 git pull
-git switch -c feature/short-description
+git switch -c feature/<issue>-short-description
 ```
 
-Name branches in lowercase with hyphens, e.g. `feature/conversation-search`, `fix/login-redirect`.
+Create the issue first, then use its number in the branch name, e.g. `feature/3-add-ci`
+(see [Issues and branch names](#issues-and-branch-names)).
 
 ### 2. Work and commit
 
-Commit as often as you like on the feature branch; these commits are squashed later.
-Keep the branch up to date with `dev`:
+Commit as often as you like; the commits are squashed when the pull request is merged.
+Run the tests before pushing:
+
+```bash
+pytest
+```
+
+If `dev` has moved on, bring your branch up to date:
 
 ```bash
 git fetch
 git rebase origin/dev
+git push --force-with-lease   # only ever on your own feature branch
 ```
 
-### 3. Squash merge into `dev`
+### 3. Open a pull request into `dev`
 
-Run the tests first (`pytest`), then:
+```bash
+git push -u origin feature/<issue>-short-description
+```
+
+Open the pull request on GitHub (the link is printed by `git push`). The base is `dev` by default.
+
+- **Title**: becomes the squashed commit's subject, so write it as a Conventional Commit,
+  e.g. `feat: add conversation search`.
+- **Description**: becomes the commit body. Say what changed and why, and end with
+  `Closes #<issue>`.
+- Wait for the CI checks to pass, then click **Squash and merge**.
+  The branch is deleted on GitHub automatically.
+
+Then update your local copy:
 
 ```bash
 git switch dev
 git pull
-git merge --squash feature/short-description
-git commit            # write one clear commit message for the whole feature
-git push
-git branch -D feature/short-description
+git branch -D feature/<issue>-short-description
 ```
 
-On GitHub, open a pull request into `dev` and use **Squash and merge** instead.
+### 4. Promote `dev` to `staging`
 
-### 4. Promote to `staging` for testing
+On GitHub, open a pull request with base `staging` and compare `dev`.
+Title it e.g. `release: v0.2.0 to staging`. Once CI passes, click **Create a merge commit**.
 
-```bash
-git switch staging
-git pull
-git merge --no-ff dev
-git push
-```
+Deploy `staging` and test it.
 
-### 5. Release to `main`
+### 5. Release `staging` to `main`
 
-Once `staging` has been tested:
+Open a pull request with base `main` and compare `staging`. Once CI passes, click
+**Create a merge commit**. Then tag the release:
 
 ```bash
 git switch main
 git pull
-git merge --no-ff staging
 git tag -a v0.2.0 -m "v0.2.0"
-git push --follow-tags
+git push origin v0.2.0
 ```
 
 Versions follow [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`.
 
 ### Hotfixes
 
-```bash
-git switch main
-git switch -c hotfix/short-description
-# fix, commit, test
-git switch main && git merge --no-ff hotfix/short-description
-git switch dev && git merge --no-ff hotfix/short-description
-git branch -d hotfix/short-description
-```
+1. Branch from `main`: `git switch main && git pull && git switch -c hotfix/<issue>-short-description`
+2. Fix, commit, test, push.
+3. Open a pull request into `main` and click **Create a merge commit**. Tag a patch release.
+4. Open a second pull request from `main` into `dev` (and `staging` if a release is in
+   progress) so the fix isn't lost.
 
-Merge the hotfix back into `staging` too if a release is in progress.
+## Continuous integration
+
+`.github/workflows/ci.yml` runs the test suite on pull requests into `dev`, `staging`
+and `main`. A pull request cannot be merged while a required check is failing.
 
 ## Commit messages
 
@@ -117,3 +168,6 @@ Credit AI assistance with a `Co-authored-by:` trailer on the last line:
 ```
 Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
 ```
+
+When squash merging on GitHub, add the trailer to the end of the commit message in the
+merge dialog if any commit on the branch had one.
