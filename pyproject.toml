@@ -3,7 +3,7 @@ name = "helpbot"
 version = "0.1.0"
 description = "AI-powered help desk chatbot using Flask and the OpenAI API."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 dependencies = [
     "flask",
     "flask-sqlalchemy",
