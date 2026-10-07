@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block title %}Chat - HelpBot{% endblock %}
+{% block content %}
+<h1>Chat</h1>
+<!-- TODO: conversation list, message window, input box -->
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

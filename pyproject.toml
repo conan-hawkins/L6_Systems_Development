@@ -1,0 +1,30 @@
+[project]
+name = "helpbot"
+version = "0.1.0"
+description = "AI-powered help desk chatbot using Flask and the OpenAI API."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flask",
+    "flask-sqlalchemy",
+    "flask-login",
+    "flask-wtf",
+    "psycopg[binary]",
+    "pymongo",
+    "openai",
+    "python-dotenv",
+    "gunicorn",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+]
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
