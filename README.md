@@ -51,4 +51,5 @@ pytest
 ## AI use acknowledgement
 
 AI (Claude) was used to generate the initial project structure, as
-permitted under Tier 2 of the coursework brief.
+permitted under Tier 2 of the coursework brief. `CLAUDE.md` records the
+rules Claude Code follows when working in this repository.
