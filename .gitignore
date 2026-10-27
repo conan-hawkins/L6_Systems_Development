@@ -21,6 +21,9 @@ instance/
 .coverage
 htmlcov/
 
+# Local assignment context (brief, plan, notes) - not part of the app
+Assignment/
+
 # Editors / OS
 .vscode/
 .idea/
