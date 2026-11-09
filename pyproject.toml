@@ -21,6 +21,7 @@ dev = [
     "pytest",
     "pytest-cov",
 ]
+scripts = ["pymupdf"]
 
 [build-system]
 requires = ["flit_core<4"]
@@ -28,3 +29,4 @@ build-backend = "flit_core.buildapi"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+

@@ -21,6 +21,10 @@ instance/
 .coverage
 htmlcov/
 
+# Copyrighted material
+*.pdf
+sections.json
+
 # Local assignment context (brief, plan, notes) - not part of the app
 Assignment/
 
