@@ -1,4 +1,5 @@
 # Cloud security design
+
 TODO: password hashing, session handling, CSRF, Google OAuth, secrets management, HTTPS, role-based access, API key protection, risks and trade-offs.
 
 ## MongoDB Atlas
@@ -10,7 +11,7 @@ Each database user on MongoDB Atlas has only the access it needs to do its job. 
 - **helpbot-ingest** has the built-in `readWrite` role on the `helpbot` database only. The ingestion script uses it to delete and re-insert a vehicle's manual sections and to create the text index, so it needs full read and write access. It is only used offline during development. Its password is kept in my local `.env` file and is never deployed.
 - **helpbot-app** is the user the live app connects as. It has a custom role, `helpbotApp`, which can read `manual_sections` and `conversations`, and can insert, update and remove documents in `conversations` only.
 
-The app uses a custom role instead of the built-in `readWrite` role because `readWrite` can drop collections. With `helpbotApp`, an attacker who compromised the app still could not change the manual data or drop any collections but can still read or delete `conversations`. I tested this: an insert into `manual_sections` as helpbot-app is rejected with a "not authorized" error.
+The app uses a custom role instead of the built-in `readWrite` role because `readWrite` can drop collections. With `helpbotApp`, an attacker who compromised the app still could not change the manual data or drop any collections but can still read or delete `conversations`. I tested this: an insert into `manual_sections` as helpbot-app is rejected with "user is not allowed to do action [insert] on [helpbot.manual_sections]".
 
 There is no admin database user. The cluster is managed through my Atlas account login, which uses MFA.
 
