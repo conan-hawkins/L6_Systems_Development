@@ -33,6 +33,8 @@ COLLECTION = "manual_sections"
 
 CHAPTER_RE = re.compile(r"^Chapter\s+(\d+)(?:\s+Part\s+([A-Z]))?:?$")
 PAGE_LABEL_RE = re.compile(r"(\d+[A-Z]?\s*•\s*\d+)")
+# Footer printed on every page (sometimes misspelt "Jeta").
+FOOTER_RE = re.compile(r"^1081\s+VW Golf & Jett?a$")
 
 
 def is_size(span, size, tolerance=0.2):
@@ -53,7 +55,8 @@ def page_lines(page):
             spans = [s for s in line["spans"] if s["text"].strip() and not is_rating_icon(s)]
             if spans:
                 text = " ".join(s["text"].strip() for s in spans)
-                yield spans, text, line["bbox"]
+                if not FOOTER_RE.match(text):
+                    yield spans, text, line["bbox"]
 
 
 def ratings_on_page(page):
@@ -141,8 +144,6 @@ def extract_sections(pdf_path, vehicle_id):
         page = doc[pno]
         ratings = ratings_on_page(page)
         page_label = page_label_of(page)
-        if current and page_label and page_label not in current["pages"]:
-            current["pages"].append(page_label)
         heading_open = False  # True while a heading wraps onto further lines
 
         for spans, text, bbox in page_lines(page):
@@ -156,13 +157,17 @@ def extract_sections(pdf_path, vehicle_id):
                     expect_chapter_title = True
                     current = None
                 continue
+            # The title can wrap onto a second 24pt line, e.g. "Engine repair
+            # procedures - " then "1.05 and 1.3 litre pre August 1985".
             if expect_chapter_title and is_size(first, 24):
-                chapter["title"] = text
-                expect_chapter_title = False
+                chapter["title"] = f"{chapter['title']} {text}".strip()
+                continue
+            if expect_chapter_title:
+                # First line after the title, so the title is complete.
                 # Everything before the first numbered section is the
                 # chapter's specifications, torque settings and contents.
+                expect_chapter_title = False
                 start_section(0, f"{chapter['title']} - specifications", None, page_label)
-                continue
 
             if chapter is None:
                 continue  # front matter (covered by the vehicle JSON instead)
@@ -186,6 +191,10 @@ def extract_sections(pdf_path, vehicle_id):
 
             heading_open = False
             if current:
+                # Record the page only once text from it is added, so a page
+                # that starts a new chapter isn't credited to the old section.
+                if page_label and page_label not in current["pages"]:
+                    current["pages"].append(page_label)
                 current["lines"].append(text)
 
     doc.close()
