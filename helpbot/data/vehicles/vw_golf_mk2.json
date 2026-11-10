@@ -1,0 +1,230 @@
+{
+  "id": "vw_golf_mk2",
+  "make": "Volkswagen",
+  "models": ["Golf", "Jetta"],
+  "generation": "Mk2",
+  "fuel": "petrol",
+  "built_from": "1984-03",
+  "built_before": "1992-02",
+  "not_covered": [
+    "Convertible", "Rallye", "Caddy", "diesel engines (including GTD)", "4-wheel drive",
+    "Mk1 models", "new Golf range introduced in February 1992"
+  ],
+  "source": {
+    "title": "VW Golf & Jetta Service and Repair Manual",
+    "authors": ["I M Coomber", "Christopher Rogers"],
+    "publisher": "Haynes Publishing",
+    "year": 1997,
+    "isbn": "1 85960 282 7"
+  },
+
+  "trims": {
+    "Golf": ["base", "C", "CL", "GL", "C Formel E", "GTI", "GTI 16V"],
+    "Jetta": ["GT"]
+  },
+  "trim_rules": {
+    "GTI": {"engine_cc": [1781]},
+    "GTI 16V": {"variant": "vw_golf_mk2_16v"},
+    "GTD": {"unsupported": "diesel"}
+  },
+
+  "common_chapters": ["1", "3", "5D", "9", "10", "11", "12"],
+
+  "variants": [
+    {
+      "id": "vw_golf_mk2_small_pre85",
+      "label": "1.05 or 1.3 litre, built before August 1985",
+      "engine_cc": [1043, 1272],
+      "valves": 8,
+      "built_from": "1984-03",
+      "built_before": "1985-08",
+      "engine_codes": ["GN", "HK"],
+      "chapters": ["2A", "4A", "5A", "5B"],
+      "oil_capacity_litres": {"with_filter": 3.0, "without_filter": 2.5},
+      "tyre_pressures_cold": {
+        "half_load": {"front_bar": 1.8, "rear_bar": 1.8, "front_psi": 26, "rear_psi": 26},
+        "full_load": {"front_bar": 1.8, "rear_bar": 2.4, "front_psi": 26, "rear_psi": 35}
+      },
+      "service_schedule": "pre_aug_1985"
+    },
+    {
+      "id": "vw_golf_mk2_small_post85",
+      "label": "1.05 or 1.3 litre, built from August 1985",
+      "engine_cc": [1043, 1272],
+      "valves": 8,
+      "built_from": "1985-08",
+      "built_before": "1992-02",
+      "engine_codes": ["HZ", "MH", "NZ", "2G"],
+      "chapters": ["2A", "2B", "4A", "4E", "5B"],
+      "oil_capacity_litres": {"with_filter": 3.5, "without_filter": 3.0},
+      "tyre_pressures_cold": {
+        "half_load": {"front_bar": 1.8, "rear_bar": 1.8, "front_psi": 26, "rear_psi": 26},
+        "full_load": {"front_bar": 1.8, "rear_bar": 2.4, "front_psi": 26, "rear_psi": 35}
+      },
+      "service_schedule": "post_aug_1985"
+    },
+    {
+      "id": "vw_golf_mk2_8v_pre85",
+      "label": "1.6 or 1.8 litre 8-valve, built before August 1985",
+      "engine_cc": [1595, 1781],
+      "valves": 8,
+      "built_from": "1984-03",
+      "built_before": "1985-08",
+      "engine_codes": ["EZ", "EV", "GU"],
+      "chapters": ["2C", "4A", "4B", "5A", "5B"],
+      "oil_capacity_litres": {"with_filter": 3.5, "without_filter": 3.0},
+      "tyre_pressures_cold": {
+        "half_load": {"front_bar": 2.0, "rear_bar": 1.8, "front_psi": 29, "rear_psi": 26},
+        "full_load": {"front_bar": 2.0, "rear_bar": 2.4, "front_psi": 29, "rear_psi": 35}
+      },
+      "service_schedule": "pre_aug_1985"
+    },
+    {
+      "id": "vw_golf_mk2_8v_post85",
+      "label": "1.6 or 1.8 litre 8-valve, built from August 1985",
+      "engine_cc": [1595, 1781],
+      "valves": 8,
+      "built_from": "1985-08",
+      "built_before": "1992-02",
+      "engine_codes": ["EZ", "RF", "EV", "GU", "PB", "PF", "RH", "RP"],
+      "chapters": ["2C", "4A", "4B", "4D", "4F", "5B"],
+      "oil_capacity_litres": {"with_filter": 4.0, "without_filter": 3.5},
+      "tyre_pressures_cold": {
+        "half_load": {"front_bar": 2.0, "rear_bar": 1.8, "front_psi": 29, "rear_psi": 26},
+        "full_load": {"front_bar": 2.0, "rear_bar": 2.4, "front_psi": 29, "rear_psi": 35}
+      },
+      "service_schedule": "post_aug_1985"
+    },
+    {
+      "id": "vw_golf_mk2_16v",
+      "label": "1.8 litre 16-valve (GTI 16V), from October 1986",
+      "engine_cc": [1781],
+      "valves": 16,
+      "built_from": "1986-10",
+      "built_before": "1992-02",
+      "engine_codes": ["KR"],
+      "chapters": ["2C", "2D", "4B", "4C", "5B", "5C"],
+      "oil_capacity_litres": {"with_filter": 4.0, "without_filter": 3.5},
+      "tyre_pressures_cold": {
+        "half_load": {"front_bar": 2.0, "rear_bar": 1.8, "front_psi": 29, "rear_psi": 26},
+        "full_load": {"front_bar": 2.0, "rear_bar": 2.4, "front_psi": 29, "rear_psi": 35}
+      },
+      "service_schedule": "post_aug_1985"
+    }
+  ],
+
+  "chapters_by_engine_code": {
+    "GN": ["2A", "4A"], "HK": ["2A", "4A"],
+    "HZ": ["2A", "2B", "4A"], "MH": ["2A", "2B", "4A"], "2G": ["2A", "2B", "4A"],
+    "NZ": ["2A", "2B", "4B", "4E"],
+    "EZ": ["2C", "4A"], "RF": ["2C", "4A"], "GU": ["2C", "4A"],
+    "EV": ["2C", "4B"],
+    "RP": ["2C", "4B", "4D"],
+    "PB": ["2C", "4B", "4F"], "PF": ["2C", "4B", "4F"],
+    "KR": ["2C", "2D", "4B", "4C", "5C"]
+  },
+
+  "fluids": {
+    "engine_oil": "Multigrade engine oil, SAE 15W/50 or 20W/50",
+    "coolant": "Ethylene-glycol based antifreeze with corrosion inhibitors, 50% by volume",
+    "manual_gearbox": "Gear oil, SAE 80",
+    "automatic_transmission": "Dexron type ATF",
+    "final_drive_automatic": "Gear oil, SAE 90EP",
+    "brake_fluid": "Hydraulic fluid to FMVSS 116 DOT 4",
+    "power_steering": [
+      {"built_before": "1989-04", "fluid": "Dexron type ATF"},
+      {"built_from": "1989-04", "fluid": "VW oil G 002 000"}
+    ]
+  },
+
+  "capacities_litres": {
+    "cooling_system": 6.3,
+    "fuel_tank": 55.0,
+    "manual_gearbox_by_code": {"084": 2.2, "085": 3.1, "020 4-speed": 1.5, "020 5-speed": 2.0},
+    "automatic_transmission": {"from_dry": 6.0, "drain_and_fill": 3.0},
+    "final_drive_automatic": 0.75
+  },
+
+  "service_schedules": {
+    "pre_aug_1985": [
+      {"task": "Lock, hinge and latch mechanism check", "manual_section": "vw_golf_mk2:1:3", "miles": 1000, "months": 1},
+      {"task": "Seat belt check", "manual_section": "vw_golf_mk2:1:4", "miles": 1000, "months": 1},
+      {"task": "Brake check", "manual_section": "vw_golf_mk2:1:5", "miles": 1000, "months": 1},
+      {"task": "Fluid leakage and engine electrical system check", "manual_section": "vw_golf_mk2:1:6", "miles": 1000, "months": 1},
+      {"task": "Battery electrolyte level check", "manual_section": "vw_golf_mk2:1:7", "miles": 1000, "months": 1},
+      {"task": "Air conditioning system check", "manual_section": "vw_golf_mk2:1:8", "miles": 1000, "months": 1, "only_if": "air_conditioning"},
+      {"task": "Fuel system control linkage check", "manual_section": "vw_golf_mk2:1:9", "miles": 1000, "months": 1},
+      {"task": "Light, direction indicator and horn check", "manual_section": "vw_golf_mk2:1:10", "miles": 1000, "months": 1},
+      {"task": "Contact breaker point check", "manual_section": "vw_golf_mk2:1:11", "miles": 5000, "months": 6, "only_if": "contact_breaker_ignition"},
+      {"task": "Valve clearance check", "manual_section": "vw_golf_mk2:1:12", "miles": 10000, "months": 12},
+      {"task": "Alternator, power steering pump and air conditioner compressor drivebelt(s) check", "manual_section": "vw_golf_mk2:1:13", "miles": 10000, "months": 12},
+      {"task": "Antifreeze concentration check", "manual_section": "vw_golf_mk2:1:14", "miles": 10000, "months": 12},
+      {"task": "Spark plug renewal", "manual_section": "vw_golf_mk2:1:15", "miles": 10000, "months": 12},
+      {"task": "Contact breaker point renewal and adjustment", "manual_section": "vw_golf_mk2:1:16", "miles": 10000, "months": 12, "only_if": "contact_breaker_ignition"},
+      {"task": "Ignition timing check", "manual_section": "vw_golf_mk2:1:17", "miles": 10000, "months": 12},
+      {"task": "Engine oil and filter renewal", "manual_section": "vw_golf_mk2:1:18", "miles": 10000, "months": 12},
+      {"task": "Exhaust system check", "manual_section": "vw_golf_mk2:1:19", "miles": 10000, "months": 12},
+      {"task": "Slow running adjustment", "manual_section": "vw_golf_mk2:1:20", "miles": 10000, "months": 12},
+      {"task": "Clutch operation check", "manual_section": "vw_golf_mk2:1:21", "miles": 10000, "months": 12, "only_if": "manual_gearbox"},
+      {"task": "Gearbox oil level check", "manual_section": "vw_golf_mk2:1:22", "miles": 10000, "months": 12, "only_if": "manual_gearbox"},
+      {"task": "Automatic transmission fluid level check", "manual_section": "vw_golf_mk2:1:23", "miles": 10000, "months": 12, "only_if": "automatic"},
+      {"task": "CV joint and boot check", "manual_section": "vw_golf_mk2:1:24", "miles": 10000, "months": 12},
+      {"task": "Fuel and brake line, hose and union check", "manual_section": "vw_golf_mk2:1:25", "miles": 10000, "months": 12},
+      {"task": "Brake pad and rear shoe lining check", "manual_section": "vw_golf_mk2:1:26", "miles": 10000, "months": 12},
+      {"task": "Headlight beam alignment check", "manual_section": "vw_golf_mk2:1:27", "miles": 10000, "months": 12},
+      {"task": "Steering gear check", "manual_section": "vw_golf_mk2:1:28", "miles": 10000, "months": 12},
+      {"task": "Suspension check", "manual_section": "vw_golf_mk2:1:29", "miles": 10000, "months": 12},
+      {"task": "Hinge and catch lubrication", "manual_section": "vw_golf_mk2:1:30", "miles": 10000, "months": 12},
+      {"task": "Vehicle underbody check", "manual_section": "vw_golf_mk2:1:31", "miles": 10000, "months": 12},
+      {"task": "Air cleaner element renewal", "manual_section": "vw_golf_mk2:1:32", "miles": 20000, "months": 24},
+      {"task": "Fuel filter renewal", "manual_section": "vw_golf_mk2:1:33", "miles": 20000, "months": 24},
+      {"task": "Automatic transmission and final drive fluid renewal", "manual_section": "vw_golf_mk2:1:35", "miles": 30000, "months": null, "only_if": "automatic"},
+      {"task": "Brake fluid renewal", "manual_section": "vw_golf_mk2:1:36", "miles": null, "months": 24},
+      {"task": "Timing belt renewal", "manual_section": "vw_golf_mk2:1:37", "miles": 40000, "months": null}
+    ],
+    "post_aug_1985": [
+      {"task": "Lock, hinge and latch mechanism check", "manual_section": "vw_golf_mk2:1:3", "miles": 1000, "months": 1},
+      {"task": "Seat belt check", "manual_section": "vw_golf_mk2:1:4", "miles": 1000, "months": 1},
+      {"task": "Brake check", "manual_section": "vw_golf_mk2:1:5", "miles": 1000, "months": 1},
+      {"task": "Fluid leakage and engine electrical system check", "manual_section": "vw_golf_mk2:1:6", "miles": 1000, "months": 1},
+      {"task": "Battery electrolyte level check", "manual_section": "vw_golf_mk2:1:7", "miles": 1000, "months": 1},
+      {"task": "Air conditioning system check", "manual_section": "vw_golf_mk2:1:8", "miles": 1000, "months": 1, "only_if": "air_conditioning"},
+      {"task": "Fuel system control linkage check", "manual_section": "vw_golf_mk2:1:9", "miles": 1000, "months": 1},
+      {"task": "Light, direction indicator and horn check", "manual_section": "vw_golf_mk2:1:10", "miles": 1000, "months": 1},
+      {"task": "Alternator, power steering pump and air conditioner compressor drivebelt(s) check", "manual_section": "vw_golf_mk2:1:13", "miles": 20000, "months": null},
+      {"task": "Antifreeze concentration check", "manual_section": "vw_golf_mk2:1:14", "miles": null, "months": 12},
+      {"task": "Spark plug renewal", "manual_section": "vw_golf_mk2:1:15", "miles": 20000, "months": null},
+      {"task": "Engine oil and filter renewal", "manual_section": "vw_golf_mk2:1:18", "miles": 10000, "months": 12},
+      {"task": "Exhaust system check", "manual_section": "vw_golf_mk2:1:19", "miles": null, "months": 12},
+      {"task": "Idling speed and mixture check", "manual_section": "vw_golf_mk2:1:20", "miles": null, "months": 12},
+      {"task": "Clutch operation check", "manual_section": "vw_golf_mk2:1:21", "miles": null, "months": 12, "only_if": "manual_gearbox"},
+      {"task": "Automatic transmission fluid level check", "manual_section": "vw_golf_mk2:1:23", "miles": null, "months": 12, "only_if": "automatic"},
+      {"task": "CV joint and boot check", "manual_section": "vw_golf_mk2:1:24", "miles": null, "months": 12},
+      {"task": "Fuel and brake line, hose and union check", "manual_section": "vw_golf_mk2:1:25", "miles": null, "months": 12},
+      {"task": "Brake pad and rear shoe lining check", "manual_section": "vw_golf_mk2:1:26", "miles": 10000, "months": 12},
+      {"task": "Headlight beam alignment check", "manual_section": "vw_golf_mk2:1:27", "miles": null, "months": 12},
+      {"task": "Steering gear check", "manual_section": "vw_golf_mk2:1:28", "miles": null, "months": 12},
+      {"task": "Suspension check", "manual_section": "vw_golf_mk2:1:29", "miles": null, "months": 12},
+      {"task": "Hinge and catch lubrication", "manual_section": "vw_golf_mk2:1:30", "miles": null, "months": 12},
+      {"task": "Vehicle underbody check", "manual_section": "vw_golf_mk2:1:31", "miles": null, "months": 12},
+      {"task": "Air cleaner element renewal", "manual_section": "vw_golf_mk2:1:32", "miles": 20000, "months": null},
+      {"task": "Fuel filter renewal", "manual_section": "vw_golf_mk2:1:33", "miles": 20000, "months": null},
+      {"task": "Sunroof guide rail cleaning and lubrication", "manual_section": "vw_golf_mk2:1:34", "miles": 20000, "months": null, "only_if": "sunroof"},
+      {"task": "Automatic transmission and final drive fluid renewal", "manual_section": "vw_golf_mk2:1:35", "miles": 20000, "months": null, "only_if": "automatic"},
+      {"task": "Brake fluid renewal", "manual_section": "vw_golf_mk2:1:36", "miles": null, "months": 24},
+      {"task": "Timing belt renewal", "manual_section": "vw_golf_mk2:1:37", "miles": 40000, "months": null}
+    ]
+  },
+
+  "notes": [
+    "Dates are 'YYYY-MM'. A variant matches when built_from <= build date < built_before.",
+    "Registration date is used in place of build date, so a car built just before August 1985 but registered after it can match the wrong variant.",
+    "A variant lists every fuel and ignition chapter its engines might use, because owners rarely know their fuel system. chapters_by_engine_code narrows this when the engine code is known.",
+    "Chapters 2B, 2D, 4C, 4D and 4F only add to a parent chapter (2A, 2C or 4B), so the parent chapter is included as well.",
+    "Intervals are 'whichever comes first' when both miles and months are given; null means the manual gives no limit of that kind.",
+    "Weekly checks (every 250 miles or weekly) are in the manual's 'Weekly checks' pages, not in these schedules.",
+    "Post-August 1985: engine oil and brake pads are every 12 months, or every 10 000 miles if the car covers more than 10 000 miles a year.",
+    "The post-August 1985 timing belt interval is printed as '40 000 miles (160 000 km)'; the km figure is a misprint, 40 000 miles is used.",
+    "Trims are only those the manual names. Add other trims (for example Driver or Carat) from a separate source."
+  ]
+}
