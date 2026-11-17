@@ -11,6 +11,9 @@ A record of the main technical decisions in HelpBot: the options considered, wha
 | 3 | NoSQL Database | MongoDB Atlas | 04/10/26 | Database Design Justification |
 | 4 | LLM Provider | OpenAI | 08/10/26 | Cloud APIs and Functions |
 | 5 | Vehicle Data API | DVLA Vehicle Enquiry Service API | 08/10/26 | Cloud APIs and Functions |
+| 6 | Manual Scope | All chapters, with safety warnings in code | 11/11/26 | Database Design Justification |
+| 7 | Seeding Vehicle Reference Data | `flask seed-vehicles` CLI command | 16/11/26 | Tools, APIs and Processes |
+| 8 | Vehicle Trims | Manual's trims plus "Other / not sure" | 16/11/26 | System Design Explanation |
 
 <!--
 To add a decision: copy the template at the end of this file, give it
@@ -228,6 +231,110 @@ DVLA treats vehicle registration numbers as sensitive information, in line with 
 Department for Transport. (2022). *Vehicle enquiry service API*. https://findtransportdata.dft.gov.uk/dataset/vehicle-enquiry-service-api-178ab5990ef
 
 Driver and Vehicle Licensing Agency. (n.d.). *Vehicle enquiry service (VES) API guide*. https://developer-portal.driver-vehicle-licensing.api.gov.uk/apis/vehicle-enquiry-service/vehicle-enquiry-service-description.html
+
+---
+
+## 6. Manual Scope
+
+**Date:**  
+11/11/26
+
+**Context:**  
+HelpBot's ingestion script extracts 394 sections from 20 chapters and chapter parts of the Haynes workshop manual into MongoDB. The project's scope is maintenance reminders and follow-up questions, not guiding users through repairs. However, Chapters 9 (brakes) and 10 (suspension and steering) contain safety-critical repair procedures, and the manual is a commercial, copyrighted work. How much of it to ingest therefore needed a deliberate decision.
+
+**Options Considered:**  
+All chapters (394 sections), Chapter 1 only (routine maintenance, 38 sections), Chapter 1 plus each chapter's specifications section
+
+**Decision:**  
+All chapters, with safety warnings enforced in code
+
+**Reasons:**  
+Ingesting every chapter gives richer answers to follow-up questions. For example, "what does the timing belt do?" can draw on the engine chapter rather than only the servicing steps in Chapter 1. Adding only the specifications sections would supply figures such as capacities and torque settings, but not the descriptive text that explains how components work.
+
+The core feature does not depend on this choice. Every service schedule item already links to a Chapter 1 section, so reminders work under all three options. The extra chapters add knowledge without adding risk to reminders.
+
+The safety risk will be handled by design rather than by leaving data out. Warning levels will be decided in code from the sections retrieved for each question: critical for Chapters 9 and 10 and for brake, steering and tyre checks; hazard for fuel system work (Chapter 4) and air conditioning (Chapter 3); and garage recommended for tasks with a Haynes difficulty rating of 4 or 5. The warning is designed to appear as a fixed banner regardless of what the LLM generates. The system prompt will also tell the model to explain rather than give repair steps, but this is a second layer, not the safeguard itself. OWASP lists misinformation (LLM09:2025) as a top risk for LLM applications, which supports not relying on the model alone for safety-critical behaviour.
+
+The warning rules will be stored in the vehicle JSON rather than hard-coded, so each vehicle brings its own rules when new manuals are added. Because the rules will be applied in code, they can be unit tested, which a prompt instruction cannot.
+
+**Trade-offs Accepted:**  
+More potentially harmful content is available than in a servicing-only design. The banner is designed to appear whenever a safety-critical section is retrieved, but the LLM following the "no repair steps" instruction is not guaranteed.
+
+The banner depends on retrieval. If a user words a question unusually and the text search misses the relevant safety-critical section, no banner will be shown.
+
+Storing the whole manual on third-party infrastructure increases copyright exposure (see Decision 3). UK copyright exceptions are narrow, and the text and data mining exception for non-commercial research (s.29A) covers computational analysis rather than showing extracts to users, so it cannot clearly be relied on here. The risk will be reduced by returning short extracts with page citations rather than whole sections, and by HelpBot being a non-commercial student project, but not removed. A real product would need a licence from Haynes.
+
+Chapters 6 (clutch), 7 (gearbox) and 8 (driveshafts) are missing from the source PDF, so "all chapters" still leaves gaps in coverage.
+
+Storage did not influence the decision. The extracted text is under 0.7 MB, well within the Atlas free tier's 0.5 GB limit.
+
+**Sources:**
+
+Copyright, Designs and Patents Act 1988, c. 48, s. 29A. https://www.legislation.gov.uk/ukpga/1988/48/section/29A
+
+Haynes Publishing. (1997). *VW Golf & Jetta service and repair manual* (Manual 1081). ISBN 1 85960 282 7.
+
+Intellectual Property Office. (n.d.). *Exceptions to copyright*. GOV.UK. https://www.gov.uk/guidance/exceptions-to-copyright
+
+OWASP. (2024). *LLM09:2025 Misinformation*. OWASP Top 10 for LLM applications 2025. https://genai.owasp.org/llm-top-10/
+
+---
+
+## 7. Seeding Vehicle Reference Data
+
+**Date:**  
+16/11/26
+
+**Context:**  
+The vehicle variants, service schedules and schedule items are reference data that every environment needs: each Neon branch, the test database and production. Their source of truth is `helpbot/data/vehicles/vw_golf_mk2.json`, which ships with the app and will change as trims, notes and safety rules are added.
+
+**Options Considered:**  
+A `flask seed-vehicles` CLI command, an Alembic data migration, manual SQL in the Neon console
+
+**Decision:**  
+`flask seed-vehicles` CLI command
+
+**Reasons:**  
+The command will upsert the JSON using PostgreSQL's `INSERT ... ON CONFLICT DO UPDATE`, so it can be re-run safely whenever the file changes and the data stays in one place. An Alembic migration runs only once per database, so every change to the JSON would need a new migration, and the data would be copied into migration files. Keeping schema changes in migrations and reference data in the seed command also separates the two concerns. The command can be unit tested with Flask's CLI test runner. Manual SQL was rejected because it is neither repeatable nor version controlled.
+
+**Trade-offs Accepted:**  
+Unlike a migration, the command does not run automatically. It must be a step in the deployment plan, after `flask db upgrade`, because the tables have to exist first. An upsert also does not remove rows that have been deleted from the JSON, so removals must be handled separately.
+
+**Sources:**
+
+Alembic. (n.d.). *Operation reference*. Alembic Documentation. https://alembic.sqlalchemy.org/en/latest/ops.html
+
+Pallets. (n.d.). *Command line interface*. Flask Documentation. https://flask.palletsprojects.com/en/stable/cli/
+
+Pallets. (n.d.). *Testing Flask applications*. Flask Documentation. https://flask.palletsprojects.com/en/stable/testing/
+
+PostgreSQL Global Development Group. (n.d.). *INSERT*. PostgreSQL Documentation. https://www.postgresql.org/docs/current/sql-insert.html
+
+---
+
+## 8. Vehicle Trims
+
+**Date:**  
+16/11/26
+
+**Context:**  
+When a user adds a car, the form matches it to one of five supported variants. Engine size and build date are usually enough, but trim matters for two rules: a GTI always has the 1.8 litre engine, and a GTI 16V uses the 16 valve variant, which has its own chapters and specifications. The Haynes manual names only the Golf base, C, CL, GL, C Formel E, GTI and GTI 16V, and the Jetta GT, although other trims were sold.
+
+**Options Considered:**  
+The manual's trims plus "Other / not sure", adding trims from other sources, no trim field
+
+**Decision:**  
+The manual's trims plus "Other / not sure"
+
+**Reasons:**  
+Every trim offered can be traced to one cited source, which matches the rest of the vehicle data. "Other / not sure" falls back to matching on engine size and build date, which is all the variant match needs outside the GTI and GTI 16V rules. Removing the field would lose the 16V rule. Adding more trims would mean finding and checking further sources without changing any variant match.
+
+**Trade-offs Accepted:**  
+Owners of unlisted trims must choose "Other", which makes the form look less complete. Trim is self-reported and cannot be checked, and the DVLA API does not return model or trim (see Decision 5), so it remains a manual field even once the API is available.
+
+**Sources:**
+
+Haynes Publishing. (1997). *VW Golf & Jetta service and repair manual* (Manual 1081). ISBN 1 85960 282 7.
 
 <!--
 ## N. Title
