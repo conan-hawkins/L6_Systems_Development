@@ -19,6 +19,7 @@ class Config:
     # SQL database (e.g. Neon Postgres) - users, conversations metadata.
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL", "sqlite:///helpbot.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
 
     # NoSQL database (e.g. MongoDB Atlas) - chat messages and transcripts.
     MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/helpbot")
