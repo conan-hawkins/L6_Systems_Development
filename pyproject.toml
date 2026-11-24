@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "flask",
     "flask-sqlalchemy",
+    "flask-migrate",
     "flask-login",
     "flask-wtf",
     "psycopg[binary]",
@@ -14,6 +15,8 @@ dependencies = [
     "openai",
     "python-dotenv",
     "gunicorn",
+    "argon2-cffi",
+    "email-validator",
 ]
 
 [project.optional-dependencies]

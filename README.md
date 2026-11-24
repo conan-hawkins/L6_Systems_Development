@@ -53,3 +53,15 @@ pytest
 AI (Claude) was used to generate the initial project structure, as
 permitted under Tier 2 of the coursework brief. `CLAUDE.md` records the
 rules Claude Code follows when working in this repository.
+
+**R1 user accounts (Nov 2026).** I wrote the User model, forms, auth
+routes, templates, migrations and tests. Claude Code was used to:
+
+- research Neon setup (pooled and direct connections, scale to zero,
+  free-tier limits) and suggest the branch workflow;
+- review my code and identify errors, including a check that returned
+  strings instead of `False` (which would have let wrong passwords log in),
+  a missing `form` in a template, and a test that never reached the
+  duplicate-email check;
+- suggest the security design (Argon2id, lowercase-email constraint,
+  POST-only logout, generic login error).
