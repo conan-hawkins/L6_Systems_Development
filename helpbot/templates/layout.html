@@ -7,7 +7,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <nav><!-- TODO: navigation links, login/logout --></nav>
+    <nav>
+        {% if current_user.is_authenticated %}
+            <span>Logged in as {{ current_user.email }}</span>
+            <form method="post" action="{{ url_for('auth.logout') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit">Log out</button>
+            </form>
+        {% else %}
+            <a href="{{ url_for('auth.login') }}">Login</a>
+            <a href="{{ url_for('auth.register') }}">Register</a>
+        {% endif %}
+    </nav>
+    {% for message in get_flashed_messages() %}
+        <p class="flash">{{ message }}</p>
+    {% endfor %}
     <main>{% block content %}{% endblock %}</main>
     {% block scripts %}{% endblock %}
 </body>

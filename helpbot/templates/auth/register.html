@@ -1,6 +1,29 @@
 {% extends "layout.html" %}
 {% block title %}Register - HelpBot{% endblock %}
 {% block content %}
-<h1>Register</h1>
-<!-- TODO: registration form -->
+<div class="main">
+    <h2>Registration Form</h2>
+    <form method="post">    
+        {{ form.hidden_tag() }}
+        {{ form.email.label }}
+        {{ form.email }}
+        {% for error in form.email.errors %}
+            <span class="error">{{ error }}</span>
+        {% endfor %}
+
+        {{ form.password.label }}
+        {{ form.password }}
+        {% for error in form.password.errors %}
+            <span class="error">{{ error }}</span>
+        {% endfor %}
+
+        {{ form.confirm_password.label }}
+        {{ form.confirm_password }}
+        {% for error in form.confirm_password.errors %}
+            <span class="error">{{ error }}</span>
+        {% endfor %}
+        
+        {{ form.submit() }}
+    </form>
+</div>
 {% endblock %}

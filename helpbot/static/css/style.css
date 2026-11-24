@@ -1,1 +1,68 @@
 /* HelpBot styles */
+.main {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.main h2 {
+    color: #2e7d32;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #767676;
+    border-radius: 5px;
+}
+
+button[type="submit"],
+input[type="submit"] {
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    background-color: #2e7d32;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+/* Small button in the nav; more specific than the rule above, so it wins. */
+nav button[type="submit"] {
+    width: auto;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+
+nav form {
+    display: inline;
+}
+
+.flash {
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+.error {
+    color: #b00020;
+    font-size: 14px;
+    display: block;
+}
