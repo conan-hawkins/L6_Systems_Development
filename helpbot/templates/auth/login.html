@@ -25,5 +25,7 @@
         
         {{ form.submit() }}
     </form>
+    <p class="or">or</p>
+    <a class="google-button" href="{{ url_for('auth.google_login') }}">Sign in with Google</a>
 </div>
 {% endblock %}

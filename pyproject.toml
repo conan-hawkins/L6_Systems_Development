@@ -17,6 +17,8 @@ dependencies = [
     "gunicorn",
     "argon2-cffi",
     "email-validator",
+    "authlib",
+    "requests",
 ]
 
 [project.optional-dependencies]
