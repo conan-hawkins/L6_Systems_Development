@@ -75,3 +75,13 @@ find, link or create flow).
 It also helped debug wrong route paths, a mis-indented `return`. 
 I chose to link Google sign-in to existing password accounts only when 
 Google reports the email as verified.
+
+**R2a vehicle reference data (Nov 2026).** Claude Code suggested the
+three-table design (service schedules, schedule items, vehicle variants)
+and keeping trims, fluids and notes in the JSON file. It gave the
+skeleton of `commands.py` (imports, `@click.command`, `DATA_DIR`), the
+`app.cli.add_command` registration line, and an outline of the upsert
+logic and the three seed tests. I wrote the models, the seed logic and
+the tests from that outline. Claude reviewed my code and identified
+errors: wrong column types (`ScheduleItem.id`, `engine_cc`,
+`oil_capacity_litres`).
