@@ -66,3 +66,17 @@ nav form {
     font-size: 14px;
     display: block;
 }
+.or {
+    text-align: center;
+    color: #555;
+}
+
+.google-button {
+    display: block;
+    text-align: center;
+    padding: 15px;
+    border: 1px solid #767676;
+    border-radius: 10px;
+    color: #333;
+    text-decoration: none;
+}

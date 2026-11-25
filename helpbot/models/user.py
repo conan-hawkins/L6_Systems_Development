@@ -1,4 +1,4 @@
-"""User model: account details, password hash."""
+"""User model: account details, password hash, and Google OAuth."""
 
 from flask import current_app
 from flask_login import UserMixin
@@ -12,12 +12,14 @@ ph = PasswordHasher()
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
-    __table_args__ = (db.CheckConstraint("email = lower(email)", name="ck_users_email_lowercase"),)
+    __table_args__ = (db.CheckConstraint("email = lower(email)", name="ck_users_email_lowercase"), 
+                      db.CheckConstraint("password_hash IS NOT NULL OR google_sub IS NOT NULL", name="ck_users_have_login_method"))
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True, nullable=False, index=True)
-    password_hash = db.Column(db.String(255), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), nullable=False, server_default=db.func.now())
+    google_sub = db.Column(db.String(255), unique=True, nullable=True, index=True)
 
     def set_password(self, password):
         """Hash the password and set password_hash."""
@@ -34,6 +36,13 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         """Verify the password against the stored hash."""
+        if self.password_hash is None:
+            if self.google_sub is None:
+                current_app.logger.warning("No password hash or Google sub set for user id %s", self.id)
+            else:
+                current_app.logger.info("User id %s uses Google OAuth for login, no password hash set.", self.id)
+            return False 
+        
         try:
             return ph.verify(self.password_hash, password)
 

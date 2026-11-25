@@ -65,3 +65,13 @@ routes, templates, migrations and tests. Claude Code was used to:
   duplicate-email check;
 - suggest the security design (Argon2id, lowercase-email constraint,
   POST-only logout, generic login error).
+
+**Google sign-in (Nov 2026).** Claude Code guided the setup 
+(Google Cloud OAuth client, Authlib, a Neon branch for the feature). 
+Claude helped me write the `oauth.register` call,
+the check-constraint lines in the migration, the
+`google_callback` logic (token error handling, email verification, the
+find, link or create flow).
+It also helped debug wrong route paths, a mis-indented `return`. 
+I chose to link Google sign-in to existing password accounts only when 
+Google reports the email as verified.
