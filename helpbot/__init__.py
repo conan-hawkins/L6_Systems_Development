@@ -5,7 +5,9 @@ Uses the application factory pattern so that different configurations
 https://flask.palletsprojects.com/en/latest/patterns/appfactories/
 """
 
-from flask import Flask
+from flask import Flask, app
+
+from helpbot.commands import seed_vehicles
 
 __version__ = "0.1.0"
 
@@ -37,5 +39,9 @@ def create_app(config_name="development"):
     app.register_blueprint(chat)
     app.register_blueprint(admin)
     app.register_blueprint(api)
+
+    # Register CLI commands.
+    from helpbot.commands import seed_vehicles
+    app.cli.add_command(seed_vehicles)
 
     return app
